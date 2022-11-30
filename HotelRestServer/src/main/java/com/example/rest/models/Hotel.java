@@ -1,5 +1,7 @@
 package com.example.rest.models;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
@@ -18,6 +20,8 @@ public class Hotel {
 	private String city;
 	private String country;
 	private int nbStars;
+	private ArrayList<Room> rooms;
+	private ArrayList<Reservation> reservations;
 
 	public Hotel() {
 
@@ -30,6 +34,7 @@ public class Hotel {
 		this.city = city;
 		this.country = country;
 		this.nbStars = nbStars;
+		rooms = new ArrayList<Room>();
 	}
 
 	public long getId() {
@@ -103,6 +108,52 @@ public class Hotel {
 	public String toString() {
 		return "Hotel [id=" + id + ", name=" + name + ", adress=" + adress + ", city=" + city + ", country=" + country
 				+ ", nbStars=" + nbStars + "]";
+	}
+
+	public void addRoom(int id, int nbBeds, double price) {
+		Room r = new Room(id, nbBeds, price);
+		this.rooms.add(r);
+	}
+
+	public void removeRoom(Room r) {
+		rooms.remove(r);
+	}
+
+	public ArrayList<Reservation> getReservartion() {
+		return this.reservations;
+	}
+	
+	public int addReservation(int idR, Client client, LocalDate startDate, LocalDate endDate) {
+		Reservation r = new Reservation(idR,this,this.rooms.get(idR), client, startDate, endDate);
+		boolean state = reservations.add(r);
+		return state == false ? -1 : idR;
+	}
+	
+	public void removeReservation(Reservation r) {
+		reservations.remove(r);
+	}
+
+	public ArrayList<Room> freeRooms(LocalDate start, LocalDate end, int nbPeoples) {
+		ArrayList<Room> free = new ArrayList<Room>();
+		for (Room r : this.rooms) {
+			if (r.getNbBeds() == nbPeoples) {
+				int i = 0;
+				boolean conflict = false;
+				while (reservations.size() > i && conflict == false) {
+					Reservation book = reservations.get(i);
+					if (book.getRoom().equals(r)) {
+						if (start.isBefore(book.getEndDate()) && end.isAfter(book.getStartDate())) {
+							conflict = true;
+						}
+					}
+					i++;
+				}
+				if (!conflict) {
+					free.add(r);
+				}
+			}
+		}
+		return free;
 	}
 
 }
