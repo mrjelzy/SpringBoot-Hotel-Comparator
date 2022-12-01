@@ -8,11 +8,11 @@
 		<version>3.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.hotel</groupId>
-	<artifactId>HotelREST</artifactId>
+	<groupId>com.example</groupId>
+	<artifactId>com.example.rest.hotel</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>HotelREST</name>
-	<description>Hotel API</description>
+	<name>HotelRestServer</name>
+	<description>REST API for Hotel</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
