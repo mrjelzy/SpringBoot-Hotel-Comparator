@@ -2,6 +2,7 @@ package com.example.rest.models;
 
 import java.util.Objects;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,8 +18,8 @@ public class Hotel {
 	private String adress;
 	private String city;
 	private String country;
-	private int nbStars;
-	
+	private int nbStars;	
+
 	public Hotel() {
 	}
 

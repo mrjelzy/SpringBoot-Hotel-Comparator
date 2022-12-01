@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.rest.exceptions.HotelNotFoundException;
 import com.example.rest.models.Hotel;
+import com.example.rest.models.Offer;
 import com.example.rest.repositories.HotelRepository;
 
 
@@ -50,6 +51,11 @@ public class HotelController {
 	public Hotel createHotel(@RequestBody Hotel hotel) {
 		return repository.save(hotel);
 	}
+	
+	/*
+	 * @PostMapping(uri + "/offers") public List<Offer> getOffers(@RequestBody ) {
+	 * return null; }
+	 */
 
 	@PutMapping(uri + "/hotels/{id}")
 	public Hotel updateHotel(@RequestBody Hotel newHotel, @PathVariable long id) {
