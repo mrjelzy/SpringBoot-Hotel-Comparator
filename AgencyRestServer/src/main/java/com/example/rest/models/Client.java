@@ -1,8 +1,15 @@
 package com.example.rest.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Client {
 
 	/* ATTRIBUTES */
+	@Id
+	@GeneratedValue
 	private int id;
 	private String name;
 	private String surname;

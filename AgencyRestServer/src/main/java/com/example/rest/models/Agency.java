@@ -1,24 +1,24 @@
 package com.example.rest.models;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Agency {
 
 	/* ATTRIBUTES */
-	@Id
-	@GeneratedValue
+	
 	private long id;
 	private String name;
 	private String login;
 	private String password;
 	private double discount;
-	//ArrayList<Client> clients;
+	ArrayList<Client> clients;
 
 	public Agency() {
 	}
@@ -29,11 +29,13 @@ public class Agency {
 		this.login = login;
 		this.password = password;
 		this.discount = discount;
-		//this.clients = new ArrayList<Client>();
+		this.clients = new ArrayList<Client>();
 
 	}
 
 	/* METHODS */
+	@Id
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	public long getId() {
 		return id;
 	}
@@ -73,21 +75,22 @@ public class Agency {
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
-
-	/*public ArrayList<Client> getClients() {
+	
+	
+	public ArrayList<Client> getClients() {
 		return clients;
 	}
 
 	public void setClients(ArrayList<Client> clients) {
 		this.clients = clients;
-	}*/
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(/*clients,*/ discount, id, login, name, password);
 	}
 
 	/*@Override
+	public int hashCode() {
+		return Objects.hash(/*clients, discount, id, login, name, password);
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -100,9 +103,9 @@ public class Agency {
 				&& Double.doubleToLongBits(discount) == Double.doubleToLongBits(other.discount) && id == other.id
 				&& Objects.equals(login, other.login) && Objects.equals(name, other.name)
 				&& Objects.equals(password, other.password);
-	}*/
+	}
 
-	/*@Override
+	@Override
 	public String toString() {
 		return "Agency [id=" + id + ", name=" + name + ", login=" + login + ", password=" + password + ", discount="
 				+ discount + ", clients=" + clients + "]";
