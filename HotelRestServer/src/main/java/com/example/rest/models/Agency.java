@@ -13,6 +13,9 @@ public class Agency {
 	private String login;
 	private String password;
 	
+	public Agency() {
+	}
+	
 	public Agency(String name, String login, String password) {
 		this.name = name;
 		this.login = login;

@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.rest.exceptions.HotelNotFoundException;
 import com.example.rest.models.Hotel;
 import com.example.rest.models.Offer;
+import com.example.rest.models.Partnership;
+import com.example.rest.repositories.AgencyRepository;
 import com.example.rest.repositories.HotelRepository;
+import com.example.rest.repositories.PartnershipRepository;
 
 
 
@@ -26,9 +29,20 @@ public class HotelController {
 	/* ATTRIBUTES */
 	@Autowired
 	private HotelRepository repository;
+	@Autowired
+	private AgencyRepository aRepository;
+	@Autowired
+	private PartnershipRepository pRepository;
 	private static final String uri = "hotelservice/api";
 
+	
 	/* METHODS */
+	
+	@GetMapping(uri + "/partner/{id}")
+	public Partnership getPartnerById(@PathVariable long id) {
+		return pRepository.findById(id).get();
+	}
+	
 	@GetMapping(uri + "/hotels")
 	public List<Hotel> getAllHotels() {
 		return repository.findAll();

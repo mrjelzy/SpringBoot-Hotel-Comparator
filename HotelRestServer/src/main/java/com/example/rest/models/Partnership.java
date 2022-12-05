@@ -18,6 +18,10 @@ public class Partnership {
     private Agency agency;
     
     private double discount;
+    
+    public Partnership() {
+    	
+    }
 
 	public Partnership(Hotel hotel, Agency agency, double discount) {
 		this.hotel = hotel;

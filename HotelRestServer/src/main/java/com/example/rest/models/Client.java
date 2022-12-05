@@ -17,6 +17,9 @@ public class Client {
 	
     @ManyToOne
     private Hotel hotel;
+    
+    public Client() {
+    }
 
 	public Client( String name, String surname, String card, String cvv, Hotel hotel) {
 		this.name = name;

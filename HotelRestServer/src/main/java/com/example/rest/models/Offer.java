@@ -25,6 +25,7 @@ public class Offer {
     @ManyToOne
     private Room room;
 
+    public Offer() {}
 	public Offer(double price, LocalDate start, LocalDate end, Hotel hotel, Agency agency, Room room) {
 		this.price = price;
 		this.start = start;

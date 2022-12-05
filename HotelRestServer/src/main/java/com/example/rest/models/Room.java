@@ -15,6 +15,8 @@ public class Room {
 	
     @ManyToOne
     private Hotel hotel;
+    
+    public Room() {}
 
 	public Room(int nbPeoples, double price, Hotel hotel) {
 		this.nbPeoples = nbPeoples;
