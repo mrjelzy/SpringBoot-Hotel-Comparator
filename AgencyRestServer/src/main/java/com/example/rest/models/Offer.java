@@ -2,8 +2,11 @@ package com.example.rest.models;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
+@Entity
 public class Offer {
 	
 	@Id
@@ -11,6 +14,7 @@ public class Offer {
 	private double price;
 	private LocalDate start;
 	private LocalDate end;
+	@ManyToOne
 	private Hotel  hotel;
 	
 	public Offer() {

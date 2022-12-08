@@ -1,18 +1,17 @@
 package com.example.rest.models;
 
-import java.util.ArrayList;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Agency {
 
 	/* ATTRIBUTES */
 	
+	@Id
+	@GeneratedValue 
 	private long id;
 	private String name;
 	private String login;
@@ -34,8 +33,11 @@ public class Agency {
 	}
 
 	/* METHODS */
-	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
+	/*
+	 * @Id
+	 * 
+	 * @GeneratedValue(strategy= GenerationType.AUTO)
+	 */
 	public long getId() {
 		return id;
 	}

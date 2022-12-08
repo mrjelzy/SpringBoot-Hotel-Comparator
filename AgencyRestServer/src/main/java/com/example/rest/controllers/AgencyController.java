@@ -18,7 +18,6 @@ import com.example.rest.exceptions.AgencyNotFoundException;
 import com.example.rest.models.Agency;
 import com.example.rest.models.Offer;
 import com.example.rest.models.Search;
-import com.example.rest.models.Todo;
 import com.example.rest.repositories.AgencyRepository;
 
 @RestController
@@ -76,15 +75,15 @@ public class AgencyController {
 		repository.delete(agency);
 	}
 
-	@PostMapping(uri + "/agencies/sendSearch")
-	public Todo sendResearch(@RequestBody Todo t/*Search search*/) {
+	/*@PostMapping(uri + "/agencies/sendSearch")
+	public Todo sendResearch(@RequestBody Todo t/*Search search) {
 		//Todo t=new Todo(101,18L,"titre test", "lorem ipsum");
 		System.out.println(t);
 		RestTemplate restTemplate=new RestTemplate();
 		Todo savedtodo=restTemplate.postForObject("https://jsonplaceholder.typicode.com/todos", t,Todo.class);
 		System.out.println(savedtodo);
 		return savedtodo;
-	}
+	}*/
 	
 	@PostMapping(uri + "/agencies/sendSearch")
 	public Search sendSearch(@RequestBody Search search) {
@@ -99,8 +98,9 @@ public class AgencyController {
 	public List<Offer> receiveOffers(){
 		
 		RestTemplate restTemplate=new RestTemplate();
-		List<Offer> savedOffers=restTemplate.getForObject("http://localhost:8080/hotel/api/", List.class)
+		List<Offer> savedOffers=restTemplate.getForObject("http://localhost:8080/hotel/api/", List.class);
 		
+		return null;
 	}
 	
 
