@@ -40,10 +40,10 @@ public class HotelData {
 		cRepository.save(c1);
 		cRepository.save(c2);
 		
-		Room r1 = new Room(3, 3000);
-		Room r2 = new Room(5, 9000);
-		Room r3 = new Room(6, 10000);
-		Room r4 = new Room(8, 8000);
+		Room r1 = new Room(3, 3000, "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/409940770.jpg?k=76b6a62e229eea3cd9ed279e1f23a6cd8d7a6e76849fd59b5eef406a95706f78&o=&hp=1");
+		Room r2 = new Room(5, 9000, "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/206967994.jpg?k=e90201be923b9965459323e977530f066fcaed85f7f89e9d1f7f8b66a2b756a4&o=&hp=1");
+		Room r3 = new Room(6, 10000, "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/366419089.jpg?k=39a1c650c952795135ac0866cb97ed3096e08837e6e576682a2874bc3a45f201&o=&hp=1");
+		Room r4 = new Room(8, 8000, "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/156333415.jpg?k=77dcf931d3673448a39e9ce378f57c4d056f1639645759bc46661c038271f63e&o=&hp=1");
 		rRepository.save(r1);
 		rRepository.save(r2);
 		rRepository.save(r3);

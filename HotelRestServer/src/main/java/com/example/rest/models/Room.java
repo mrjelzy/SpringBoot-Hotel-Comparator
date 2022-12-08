@@ -11,12 +11,22 @@ public class Room {
 	private long id;
 	private int nbPeoples;
 	private double price;
+	private String urlImg;
 	
-    public Room() {}
+	public String getUrlImg() {
+		return urlImg;
+	}
 
-	public Room(int nbPeoples, double price) {
+	public void setUrlImg(String urlImg) {
+		this.urlImg = urlImg;
+	}
+
+	public Room() {}
+
+	public Room(int nbPeoples, double price, String urlImg) {
 		this.nbPeoples = nbPeoples;
 		this.price = price;
+		this.urlImg = urlImg;
 	}
 
 	public long getId() {
