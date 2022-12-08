@@ -18,7 +18,7 @@ public class Agency {
 	private String login;
 	private String password;
 	private double discount;
-	ArrayList<Client> clients;
+	
 
 	public Agency() {
 	}
@@ -29,7 +29,7 @@ public class Agency {
 		this.login = login;
 		this.password = password;
 		this.discount = discount;
-		this.clients = new ArrayList<Client>();
+		//this.clients = new ArrayList<Client>();
 
 	}
 
@@ -77,13 +77,13 @@ public class Agency {
 	}
 	
 	
-	public ArrayList<Client> getClients() {
+	/*public ArrayList<Client> getClients() {
 		return clients;
 	}
 
 	public void setClients(ArrayList<Client> clients) {
 		this.clients = clients;
-	}
+	}*/
 
 	/*@Override
 	public int hashCode() {

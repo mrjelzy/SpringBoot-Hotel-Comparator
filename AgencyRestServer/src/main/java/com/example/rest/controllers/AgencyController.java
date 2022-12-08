@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.rest.exceptions.AgencyNotFoundException;
 import com.example.rest.models.Agency;
+import com.example.rest.models.Offer;
+import com.example.rest.models.Search;
+import com.example.rest.models.Todo;
 import com.example.rest.repositories.AgencyRepository;
 
 @RestController
@@ -37,7 +41,7 @@ public class AgencyController {
 	}
 
 	@GetMapping(uri + "/agencies/{id}")
-	public Agency getEmployeeById(@PathVariable long id) throws AgencyNotFoundException {
+	public Agency getAgencyById(@PathVariable long id) throws AgencyNotFoundException {
 		return repository.findById(id)
 				.orElseThrow(() -> new AgencyNotFoundException("Error : Could not fint employee with id : " + id));
 	}
@@ -49,7 +53,7 @@ public class AgencyController {
 	}
 
 	@PutMapping(uri + "/agencies/{id}")
-	public Agency updateEmployee(@RequestBody Agency newAgency, @PathVariable long id) {
+	public Agency updateAgency(@RequestBody Agency newAgency, @PathVariable long id) {
 		return repository.findById(id).map(agency -> {
 			agency.setName(newAgency.getName());
 			agency.setLogin(newAgency.getLogin());
@@ -66,10 +70,38 @@ public class AgencyController {
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(uri + "/agencies/{id}")
-	public void deleteEmployee(@PathVariable long id) throws AgencyNotFoundException {
+	public void deleteAgency(@PathVariable long id) throws AgencyNotFoundException {
 		Agency agency = repository.findById(id)
 				.orElseThrow(() -> new AgencyNotFoundException("Error : Could not fint employee with id : " + id));
 		repository.delete(agency);
 	}
+
+	@PostMapping(uri + "/agencies/sendSearch")
+	public Todo sendResearch(@RequestBody Todo t/*Search search*/) {
+		//Todo t=new Todo(101,18L,"titre test", "lorem ipsum");
+		System.out.println(t);
+		RestTemplate restTemplate=new RestTemplate();
+		Todo savedtodo=restTemplate.postForObject("https://jsonplaceholder.typicode.com/todos", t,Todo.class);
+		System.out.println(savedtodo);
+		return savedtodo;
+	}
+	
+	@PostMapping(uri + "/agencies/sendSearch")
+	public Search sendSearch(@RequestBody Search search) {
+		//Todo t=new Todo(101,18L,"titre test", "lorem ipsum");
+		RestTemplate restTemplate=new RestTemplate();
+		Search savedSearch=restTemplate.postForObject("http://localhost:8080/hotel/api/",search,Search.class);
+		System.out.println(savedSearch);
+		return search;
+	}
+	
+	@PostMapping(uri + "/agencies/receiveOffers")
+	public List<Offer> receiveOffers(){
+		
+		RestTemplate restTemplate=new RestTemplate();
+		List<Offer> savedOffers=restTemplate.getForObject("http://localhost:8080/hotel/api/", List.class)
+		
+	}
+	
 
 }
