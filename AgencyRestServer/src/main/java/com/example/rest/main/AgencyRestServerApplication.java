@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 
 @SpringBootApplication(scanBasePackages= {
+		"com.example.rest.data",
 		"com.example.rest.controllers",
 		"come.example.rest.exception"
 })

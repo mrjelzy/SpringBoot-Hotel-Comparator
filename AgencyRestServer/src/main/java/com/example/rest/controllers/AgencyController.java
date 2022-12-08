@@ -1,10 +1,11 @@
 package com.example.rest.controllers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,94 +15,118 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.rest.comparator.OutputBooking;
+import com.example.rest.comparator.InputBooking;
+import com.example.rest.comparator.InputSearch;
+import com.example.rest.comparator.OutputSearch;
 import com.example.rest.exceptions.AgencyNotFoundException;
 import com.example.rest.models.Agency;
+import com.example.rest.models.Hotel;
 import com.example.rest.models.Offer;
-import com.example.rest.models.Search;
 import com.example.rest.repositories.AgencyRepository;
+import com.example.rest.repositories.HotelRepository;
+import com.example.rest.repositories.OfferRepository;
 
 @RestController
 public class AgencyController {
 
 	/* ATTRIBUTES */
 	@Autowired
-	private AgencyRepository repository;
+	private AgencyRepository aRepository;
+
+	@Autowired
+	private HotelRepository hRepository;
+
+	@Autowired
+	private OfferRepository oRepository;
+
 	private static final String uri = "agencyservice/api";
 
 	/* METHODS */
 	@GetMapping(uri + "/agencies")
 	public List<Agency> getAllAgencys() {
-		return repository.findAll();
-	}
-
-	@GetMapping(uri + "/agencies/count")
-	public String count() {
-		return String.format("{\"%s\" : %s}", "count", repository.count());
-	}
-
-	@GetMapping(uri + "/agencies/{id}")
-	public Agency getAgencyById(@PathVariable long id) throws AgencyNotFoundException {
-		return repository.findById(id)
-				.orElseThrow(() -> new AgencyNotFoundException("Error : Could not fint employee with id : " + id));
-	}
-
-	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping(uri + "/agencies")
-	public Agency createAgency(@RequestBody Agency agency) {
-		return repository.save(agency);
+		return aRepository.findAll();
 	}
 
 	@PutMapping(uri + "/agencies/{id}")
-	public Agency updateAgency(@RequestBody Agency newAgency, @PathVariable long id) {
-		return repository.findById(id).map(agency -> {
+	public Agency updateAgency(@RequestBody Agency newAgency, @PathVariable long id) throws AgencyNotFoundException {
+		return aRepository.findById(id).map(agency -> {
 			agency.setName(newAgency.getName());
 			agency.setLogin(newAgency.getLogin());
 			agency.setPassword(newAgency.getPassword());
 			agency.setDiscount(newAgency.getDiscount());
-			repository.save(agency);
+			aRepository.save(agency);
 			return agency;
+		}).orElseThrow(() -> new AgencyNotFoundException("Error : Could not fint agency with id : " + id));
+	}
+
+	@PostMapping(uri + "/agencies/sendSearch")
+	public List<Offer> sendSearch(@RequestBody InputSearch input) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		String city = input.getCity();
+		String country = input.getCountry();
+
+		List<Hotel> hotel = hRepository.findByCityAndCountry(input.getCity(), input.getCountry());
+		Agency agency = aRepository.findById(1L).get();
+
+		OutputSearch output = new OutputSearch(agency.getLogin(), agency.getPassword(), input.getStart(),
+				input.getEnd(), input.getNbPeople());
+		List<Offer> offers = new ArrayList<Offer>();
+		
+		for (Hotel h : hotel) {
+			Long idH = h.getId();
+			Offer[] offer = restTemplate.postForObject("http://localhost:8080/hotelservice/" + idH + "/api/offers",
+					output, Offer[].class);
+			for (Offer o : offer)
+				o.setHotel(h);
+			offers.addAll(Arrays.asList(offer));
+		}
+		for (Offer o : offers) {
+			o.setIdOffer(o.getId());
+			oRepository.save(o);
+		}
+		return offers;
+	}
+
+	@PostMapping(uri + "/agencies/sendChoice")
+	public Long sendChoice(@RequestBody InputBooking input) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		Offer offer = oRepository.findById(input.getIdOffer()).get();
+		Agency agency = aRepository.findById(1L).get();
+		OutputBooking output = new OutputBooking(agency.getLogin(), agency.getPassword(), input.getIdOffer(),
+				input.getName(), input.getSurname(), input.getCard(), input.getCvv(), input.getExp());
+
+		Long idH = offer.getHotel().getId();
+
+		Long idBooking = restTemplate.postForObject("http://localhost:8080/hotelservice/" + idH + "/api/book", output,
+				Long.class);
+
+		return idBooking;
+	}
+
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping(uri + "/addhotel")
+	public Hotel createHotel(@RequestBody Hotel hotel) {
+		return hRepository.save(hotel);
+	}
+
+	@PutMapping(uri + "/addhotel/{id}")
+	public Hotel updateEmployee(@RequestBody Hotel newHotel, @PathVariable long id) {
+		return hRepository.findById(id).map(hotel -> {
+			hotel.setId(newHotel.getId());
+			hotel.setName(newHotel.getName());
+			hotel.setAdress(newHotel.getAdress());
+			hotel.setCity(newHotel.getCity());
+			hotel.setCountry(newHotel.getCountry());
+			hotel.setNbStars(newHotel.getNbStars());
+			return hotel;
 		}).orElseGet(() -> {
-			newAgency.setId(id);
-			repository.save(newAgency);
-			return newAgency;
+			newHotel.setId(id);
+			hRepository.save(newHotel);
+			return newHotel;
 		});
 	}
-
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@DeleteMapping(uri + "/agencies/{id}")
-	public void deleteAgency(@PathVariable long id) throws AgencyNotFoundException {
-		Agency agency = repository.findById(id)
-				.orElseThrow(() -> new AgencyNotFoundException("Error : Could not fint employee with id : " + id));
-		repository.delete(agency);
-	}
-
-	/*@PostMapping(uri + "/agencies/sendSearch")
-	public Todo sendResearch(@RequestBody Todo t/*Search search) {
-		//Todo t=new Todo(101,18L,"titre test", "lorem ipsum");
-		System.out.println(t);
-		RestTemplate restTemplate=new RestTemplate();
-		Todo savedtodo=restTemplate.postForObject("https://jsonplaceholder.typicode.com/todos", t,Todo.class);
-		System.out.println(savedtodo);
-		return savedtodo;
-	}*/
-	
-	@PostMapping(uri + "/agencies/sendSearch")
-	public Search sendSearch(@RequestBody Search search) {
-		//Todo t=new Todo(101,18L,"titre test", "lorem ipsum");
-		RestTemplate restTemplate=new RestTemplate();
-		Search savedSearch=restTemplate.postForObject("http://localhost:8080/hotel/api/",search,Search.class);
-		System.out.println(savedSearch);
-		return search;
-	}
-	
-	@PostMapping(uri + "/agencies/receiveOffers")
-	public List<Offer> receiveOffers(){
-		
-		RestTemplate restTemplate=new RestTemplate();
-		List<Offer> savedOffers=restTemplate.getForObject("http://localhost:8080/hotel/api/", List.class);
-		
-		return null;
-	}
-	
 
 }

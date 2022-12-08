@@ -3,20 +3,25 @@ package com.example.rest.models;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Offer {
-	
+
 	@Id
+	@GeneratedValue
 	private long id;
 	private double price;
 	private LocalDate start;
 	private LocalDate end;
+
 	@ManyToOne
-	private Hotel  hotel;
-	
+	@JoinColumn(name = "hotel_id", referencedColumnName = "id")
+	private Hotel hotel;
+
 	public Offer() {
 	}
 
@@ -66,13 +71,18 @@ public class Offer {
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
 	}
+	
+	public long getIdOffer() {
+		return idOffer;
+	}
+
+	public void setIdOffer(long idOffer) {
+		this.idOffer = idOffer;
+	}
 
 	@Override
 	public String toString() {
 		return "Offer [id=" + id + ", price=" + price + ", start=" + start + ", end=" + end + ", hotel=" + hotel + "]";
 	}
-	
-	
-	
-	
+
 }

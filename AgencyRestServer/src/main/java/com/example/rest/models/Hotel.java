@@ -11,28 +11,21 @@ import jakarta.persistence.OneToMany;
 public class Hotel {
 
 	@Id
-	@GeneratedValue
 	private long id;
 	private String name;
 	private String adress;
 	private String city;
 	private String country;
 	private int nbStars;
-	@OneToMany
-	List<Offer> offers;
-
-	public List<Offer> getOffers() {
-		return offers;
-	}
-
-	public void setOffers(List<Offer> offers) {
-		this.offers = offers;
-	}
-
+	
+	@OneToMany(mappedBy="hotel")
+	private List<Offer> offers;
+	
 	public Hotel() {
 	}
 
-	public Hotel(String name, String adress, String city, String country, int nbStars) {
+	public Hotel(long id, String name, String adress, String city, String country, int nbStars) {
+		this.id=id;
 		this.name = name;
 		this.adress = adress;
 		this.city = city;

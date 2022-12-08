@@ -1,8 +1,8 @@
-package com.example.rest.models;
+package com.example.rest.comparator;
 
 import java.time.LocalDate;
 
-public class Search {
+public class InputSearch {
 
 	/* ATTRIBUTES */
 	String city;
@@ -11,10 +11,11 @@ public class Search {
 	private LocalDate end;
 	private int nbPeople;
 
-	public Search() {
+	public InputSearch() {
 	}
 
-	public Search(String city, String country, LocalDate start, LocalDate end, int nbPeople) {
+	public InputSearch(String city, String country, LocalDate start, LocalDate end, int nbPeople) {
+
 		this.city = city;
 		this.country = country;
 		this.start = start;
