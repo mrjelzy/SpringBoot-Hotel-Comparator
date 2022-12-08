@@ -14,25 +14,21 @@ public class Client {
 	private String surname;
 	private String card;
 	private String cvv;
-	
-    @ManyToOne
-    private Hotel hotel;
     
     public Client() {
     }
 
-	public Client( String name, String surname, String card, String cvv, Hotel hotel) {
+	public Client( String name, String surname, String card, String cvv) {
 		this.name = name;
 		this.surname = surname;
 		this.card = card;
 		this.cvv = cvv;
-		this.hotel = hotel;
 	}
 
 	@Override
 	public String toString() {
 		return "Client [id=" + id + ", name=" + name + ", surname=" + surname + ", card=" + card + ", cvv=" + cvv
-				+ ", hotel=" + hotel + "]";
+				+ "]";
 	}
 
 	public long getId() {
@@ -73,15 +69,6 @@ public class Client {
 
 	public void setCvv(String cvv) {
 		this.cvv = cvv;
-	}
-
-	public Hotel getHotel() {
-		return hotel;
-	}
-
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
-    
+	}    
     
 }

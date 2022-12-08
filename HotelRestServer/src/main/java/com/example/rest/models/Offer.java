@@ -1,5 +1,6 @@
 package com.example.rest.models;
 
+
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
@@ -12,9 +13,9 @@ public class Offer {
 	@Id
 	@GeneratedValue
 	private long id;
-	private double price;
 	private LocalDate start;
 	private LocalDate end;
+	private double price;
 	
     @ManyToOne
     private Hotel hotel;
@@ -26,29 +27,27 @@ public class Offer {
     private Room room;
 
     public Offer() {}
-	public Offer(double price, LocalDate start, LocalDate end, Hotel hotel, Agency agency, Room room) {
-		this.price = price;
+	public Offer(LocalDate start, LocalDate end, Hotel hotel, Agency agency, Room room, double price) {
 		this.start = start;
 		this.end = end;
 		this.hotel = hotel;
 		this.agency = agency;
 		this.room = room;
+		this.price = price;
 	}
 
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
 	}
 
 	public LocalDate getStart() {

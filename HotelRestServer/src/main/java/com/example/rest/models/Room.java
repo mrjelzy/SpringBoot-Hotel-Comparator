@@ -13,15 +13,11 @@ public class Room {
 	private int nbPeoples;
 	private double price;
 	
-    @ManyToOne
-    private Hotel hotel;
-    
     public Room() {}
 
-	public Room(int nbPeoples, double price, Hotel hotel) {
+	public Room(int nbPeoples, double price) {
 		this.nbPeoples = nbPeoples;
 		this.price = price;
-		this.hotel = hotel;
 	}
 
 	public long getId() {
@@ -48,17 +44,9 @@ public class Room {
 		this.price = price;
 	}
 
-	public Hotel getHotel() {
-		return hotel;
-	}
-
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
-
 	@Override
 	public String toString() {
-		return "Room [id=" + id + ", nbPeoples=" + nbPeoples + ", price=" + price + ", hotel=" + hotel + "]";
+		return "Room [id=" + id + ", nbPeoples=" + nbPeoples + ", price=" + price + "]";
 	}  
 	
     

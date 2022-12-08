@@ -1,6 +1,9 @@
 package com.example.rest.controllers;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,13 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.rest.agency.InputOffer;
+import com.example.rest.exceptions.AgencyNotFoundException;
 import com.example.rest.exceptions.HotelNotFoundException;
+import com.example.rest.models.Agency;
+import com.example.rest.models.Booking;
 import com.example.rest.models.Hotel;
 import com.example.rest.models.Offer;
 import com.example.rest.models.Partnership;
+import com.example.rest.models.Room;
 import com.example.rest.repositories.AgencyRepository;
+import com.example.rest.repositories.BookingRepository;
+import com.example.rest.repositories.ClientRepository;
 import com.example.rest.repositories.HotelRepository;
 import com.example.rest.repositories.PartnershipRepository;
+import com.example.rest.repositories.RoomRepository;
 
 
 
@@ -33,6 +44,12 @@ public class HotelController {
 	private AgencyRepository aRepository;
 	@Autowired
 	private PartnershipRepository pRepository;
+	@Autowired
+	private BookingRepository bRepository;
+	@Autowired
+	private RoomRepository rRepository;
+	@Autowired
+	private ClientRepository cRepository;
 	private static final String uri = "hotelservice/api";
 
 	
@@ -47,10 +64,10 @@ public class HotelController {
 	public List<Hotel> getAllHotels() {
 		return repository.findAll();
 	}
-
-	@GetMapping(uri + "/hotels/count")
-	public String count() {
-		return String.format("{\"%s\" : %s}", "count", repository.count());
+	
+	@GetMapping(uri + "/bookings")
+	public List<Booking> getAllBookings() {
+		return bRepository.findAll();
 	}
 
 	@GetMapping(uri + "/hotels/{id}")
@@ -64,6 +81,29 @@ public class HotelController {
 	@PostMapping(uri + "/hotels")
 	public Hotel createHotel(@RequestBody Hotel hotel) {
 		return repository.save(hotel);
+	}
+	
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping(uri + "/offers")
+	public List<Offer> getOffers(@RequestBody InputOffer input) throws AgencyNotFoundException {
+		if(!aRepository.findByLoginAndPassword(input.getaName(), input.getaPassword()).isPresent())
+			throw new AgencyNotFoundException("Agence non reconnu");
+		Agency connected = aRepository.findByLoginAndPassword(input.getaName(), input.getaPassword()).get();
+		List<Room> rooms = rRepository.findByNbPeoplesGreaterThanEqual(input.getNbPeoples());
+		List<Room> freeRooms = bRepository.findRoomsByFreeDates(input.getEnd(), input.getStart());
+		List<Room> availableRooms = new ArrayList<Room>();
+		for(Room r : freeRooms) {
+			if(rooms.contains(r))
+				availableRooms.add(r);
+		}
+		List<Offer> offers = new ArrayList<Offer>();
+		for(Room r : availableRooms) {
+			/*
+			 * double price = r.getPrice() Offer o = new Offer(LocalDate start, LocalDate
+			 * end, Hotel hotel, Agency agency, Room room, double price)
+			 */
+		}
+		return null;
 	}
 	
 	/*
