@@ -35,8 +35,8 @@ public class HotelData {
 		aRepository.save(a1);
 		aRepository.save(a2);
 		
-		Client c1 = new Client("Ryan", "Bengoufa", "345678", "45");
-		Client c2 = new Client("Lucas", "Manolo", "345678", "45");
+		Client c1 = new Client("Ryan", "Bengoufa", "345678","12/23" ,"45");
+		Client c2 = new Client("Lucas", "Manolo", "345678","12/25" ,"45");
 		cRepository.save(c1);
 		cRepository.save(c2);
 		

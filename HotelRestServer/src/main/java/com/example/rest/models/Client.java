@@ -13,15 +13,18 @@ public class Client {
 	private String name;
 	private String surname;
 	private String card;
+	private String exp;
 	private String cvv;
+
     
     public Client() {
     }
 
-	public Client( String name, String surname, String card, String cvv) {
+	public Client( String name, String surname, String card, String exp,String cvv) {
 		this.name = name;
 		this.surname = surname;
 		this.card = card;
+		this.exp = exp;
 		this.cvv = cvv;
 	}
 
@@ -29,6 +32,14 @@ public class Client {
 	public String toString() {
 		return "Client [id=" + id + ", name=" + name + ", surname=" + surname + ", card=" + card + ", cvv=" + cvv
 				+ "]";
+	}
+	
+	public String getExp() {
+		return exp;
+	}
+
+	public void setExp(String exp) {
+		this.exp = exp;
 	}
 
 	public long getId() {

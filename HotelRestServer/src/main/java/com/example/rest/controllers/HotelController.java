@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.rest.agency.InputBooking;
 import com.example.rest.agency.InputOffer;
 import com.example.rest.exceptions.AgencyNotFoundException;
+import com.example.rest.exceptions.BadAgencyException;
 import com.example.rest.exceptions.HotelNotFoundException;
 import com.example.rest.models.Agency;
 import com.example.rest.models.Booking;
+import com.example.rest.models.Client;
 import com.example.rest.models.Hotel;
 import com.example.rest.models.Offer;
 import com.example.rest.models.Room;
@@ -39,8 +41,6 @@ public class HotelController {
 	private AgencyRepository aRepository;
 	@Autowired
 	private BookingRepository bRepository;
-	@Autowired
-	private RoomRepository rRepository;
 	@Autowired
 	private ClientRepository cRepository;
 	@Autowired
@@ -63,7 +63,7 @@ public class HotelController {
 	}
 
 
-	@ResponseStatus(HttpStatus.ACCEPTED)
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(uri + "/offers")
 	public List<Offer> getOffers(@RequestBody InputOffer input) throws AgencyNotFoundException {
 		if(!aRepository.findByLoginAndPassword(input.getLogin(), input.getPassword()).isPresent())
@@ -79,6 +79,22 @@ public class HotelController {
 			oRepository.save(o);
 		}
 		return offers;
+	}
+	
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping(uri + "/book")
+	public long setBooking(@RequestBody InputBooking input) throws AgencyNotFoundException, BadAgencyException {
+		if(!aRepository.findByLoginAndPassword(input.getLogin(), input.getPassword()).isPresent())
+			throw new AgencyNotFoundException("Agence non reconnu");
+		Agency connected = aRepository.findByLoginAndPassword(input.getLogin(), input.getPassword()).get();
+		Offer o = oRepository.findById(input.getIdOffer()).get();
+		if(connected != o.getAgency())
+			throw new BadAgencyException("Agence ne corresponds pas avec l'offre");
+		Client c = new Client(input.getName(), input.getSurname(), input.getCard(), input.getExp(), input.getCvv());
+		cRepository.save(c);
+		Booking b = new Booking(c, connected, o.getRoom(), o.getStart(), o.getEnd());
+		bRepository.save(b);
+		return b.getId();
 	}
 	
 	@PutMapping(uri + "/hotel")

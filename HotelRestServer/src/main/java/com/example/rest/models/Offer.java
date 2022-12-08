@@ -3,10 +3,12 @@ package com.example.rest.models;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Offer {
@@ -17,13 +19,14 @@ public class Offer {
 	private LocalDate end;
 	private double discount;
 	
-    @ManyToOne
+    @OneToOne
     private Hotel hotel;
     
-    @ManyToOne
+    @OneToOne
+    @JsonIgnore
     private Agency agency;
     
-    @ManyToOne
+    @OneToOne
     private Room room;
 
     public Offer() {}
