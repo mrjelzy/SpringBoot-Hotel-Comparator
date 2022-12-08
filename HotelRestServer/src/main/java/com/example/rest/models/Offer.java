@@ -15,7 +15,7 @@ public class Offer {
 	private long id;
 	private LocalDate start;
 	private LocalDate end;
-	private double price;
+	private double discount;
 	
     @ManyToOne
     private Hotel hotel;
@@ -27,20 +27,21 @@ public class Offer {
     private Room room;
 
     public Offer() {}
-	public Offer(LocalDate start, LocalDate end, Hotel hotel, Agency agency, Room room, double price) {
+	public Offer(LocalDate start, LocalDate end, Hotel hotel, Agency agency, Room room, double discount) {
 		this.start = start;
 		this.end = end;
 		this.hotel = hotel;
 		this.agency = agency;
 		this.room = room;
-		this.price = price;
+		this.discount = discount;
 	}
 
-	public double getPrice() {
-		return price;
+
+	public double getDiscount() {
+		return discount;
 	}
-	public void setPrice(double price) {
-		this.price = price;
+	public void setDiscount(double discount) {
+		this.discount = discount;
 	}
 	public long getId() {
 		return id;

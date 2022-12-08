@@ -1,9 +1,7 @@
 package com.example.rest.controllers;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,16 +21,13 @@ import com.example.rest.models.Agency;
 import com.example.rest.models.Booking;
 import com.example.rest.models.Hotel;
 import com.example.rest.models.Offer;
-import com.example.rest.models.Partnership;
 import com.example.rest.models.Room;
 import com.example.rest.repositories.AgencyRepository;
 import com.example.rest.repositories.BookingRepository;
 import com.example.rest.repositories.ClientRepository;
 import com.example.rest.repositories.HotelRepository;
-import com.example.rest.repositories.PartnershipRepository;
+import com.example.rest.repositories.OfferRepository;
 import com.example.rest.repositories.RoomRepository;
-
-
 
 @RestController
 public class HotelController {
@@ -43,77 +38,52 @@ public class HotelController {
 	@Autowired
 	private AgencyRepository aRepository;
 	@Autowired
-	private PartnershipRepository pRepository;
-	@Autowired
 	private BookingRepository bRepository;
 	@Autowired
 	private RoomRepository rRepository;
 	@Autowired
 	private ClientRepository cRepository;
+	@Autowired
+	private OfferRepository oRepository;
 	private static final String uri = "hotelservice/api";
 
 	
 	/* METHODS */
-	
-	@GetMapping(uri + "/partner/{id}")
-	public Partnership getPartnerById(@PathVariable long id) {
-		return pRepository.findById(id).get();
-	}
-	
-	@GetMapping(uri + "/hotels")
-	public List<Hotel> getAllHotels() {
-		return repository.findAll();
-	}
-	
+		
 	@GetMapping(uri + "/bookings")
 	public List<Booking> getAllBookings() {
 		return bRepository.findAll();
 	}
 
-	@GetMapping(uri + "/hotels/{id}")
+	@GetMapping(uri + "/hotel")
 	public Hotel getHotelById(@PathVariable long id) throws HotelNotFoundException {
-		return repository.findById(id)
+		return repository.findById(1L)
 				.orElseThrow(() -> new HotelNotFoundException(
 						"Error : Could not fint hotel with id : " + id));
 	}
 
-	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping(uri + "/hotels")
-	public Hotel createHotel(@RequestBody Hotel hotel) {
-		return repository.save(hotel);
-	}
-	
-	@ResponseStatus(HttpStatus.CREATED)
+
+	@ResponseStatus(HttpStatus.ACCEPTED)
 	@PostMapping(uri + "/offers")
 	public List<Offer> getOffers(@RequestBody InputOffer input) throws AgencyNotFoundException {
-		if(!aRepository.findByLoginAndPassword(input.getaName(), input.getaPassword()).isPresent())
+		if(!aRepository.findByLoginAndPassword(input.getLogin(), input.getPassword()).isPresent())
 			throw new AgencyNotFoundException("Agence non reconnu");
-		Agency connected = aRepository.findByLoginAndPassword(input.getaName(), input.getaPassword()).get();
-		List<Room> rooms = rRepository.findByNbPeoplesGreaterThanEqual(input.getNbPeoples());
-		List<Room> freeRooms = bRepository.findRoomsByFreeDates(input.getEnd(), input.getStart());
-		List<Room> availableRooms = new ArrayList<Room>();
-		for(Room r : freeRooms) {
-			if(rooms.contains(r))
-				availableRooms.add(r);
-		}
+		Agency connected = aRepository.findByLoginAndPassword(input.getLogin(), input.getPassword()).get();
+		List<Room> availableRooms = bRepository.findRoomsByFreeDates(input.getStart(), input.getEnd(), input.getNbPeoples());
+		Hotel h = repository.findById(1L).get();
 		List<Offer> offers = new ArrayList<Offer>();
 		for(Room r : availableRooms) {
-			/*
-			 * double price = r.getPrice() Offer o = new Offer(LocalDate start, LocalDate
-			 * end, Hotel hotel, Agency agency, Room room, double price)
-			 */
+			System.out.println(r);
+			Offer o = new Offer(input.getStart(), input.getEnd(), h, connected, r, connected.getDiscount());
+			offers.add(o);
+			oRepository.save(o);
 		}
-		return null;
+		return offers;
 	}
 	
-	/*
-	 * @PostMapping(uri + "/offers") public List<Offer> getOffers(@RequestBody ) {
-	 * return null; }
-	 */
-
-	@PutMapping(uri + "/hotels/{id}")
+	@PutMapping(uri + "/hotel")
 	public Hotel updateHotel(@RequestBody Hotel newHotel, @PathVariable long id) {
-		return repository.findById(id).map(hotel -> {
+		return repository.findById(1L).map(hotel -> {
 			hotel.setName(newHotel.getName());
 			hotel.setAdress(newHotel.getAdress());
 			hotel.setCity(newHotel.getCity());
@@ -126,14 +96,6 @@ public class HotelController {
 			repository.save(newHotel);
 			return newHotel;
 		});
-	}
-
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@DeleteMapping(uri + "/hotels/{id}")
-	public void deleteHotel(@PathVariable long id) throws HotelNotFoundException {
-		Hotel hotel = repository.findById(id)
-				.orElseThrow(() -> new HotelNotFoundException("Error : Could not fint employee with id : " + id));
-		repository.delete(hotel);
 	}
 
 }

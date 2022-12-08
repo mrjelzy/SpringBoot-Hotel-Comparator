@@ -1,5 +1,7 @@
 package com.example.rest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -10,16 +12,28 @@ public class Agency {
 	@GeneratedValue
 	private long id;
 	private String name;
+	@JsonIgnore
 	private String login;
+	@JsonIgnore
 	private String password;
+	private double discount;
 	
 	public Agency() {
 	}
 	
-	public Agency(String name, String login, String password) {
+	public Agency(String name, String login, String password, double discount) {
 		this.name = name;
 		this.login = login;
 		this.password = password;
+		this.discount = discount;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
 	}
 
 	public long getId() {

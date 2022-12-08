@@ -3,37 +3,38 @@ package com.example.rest.agency;
 import java.time.LocalDate;
 
 public class InputOffer {
-	private String aName;
-	private String aPassword;
+	private String login;
+	private String password;
 	LocalDate start;
 	LocalDate end;
 	int nbPeoples;
 	
 	public InputOffer() {}
 
-	public InputOffer(String aName, String aPassword, LocalDate start, LocalDate end, int nbPeoples) {
+	public InputOffer(String login, String password, LocalDate start, LocalDate end, int nbPeoples) {
 		super();
-		this.aName = aName;
-		this.aPassword = aPassword;
+		this.login = login;
+		this.password = password;
 		this.start = start;
 		this.end = end;
 		this.nbPeoples = nbPeoples;
 	}
 
-	public String getaName() {
-		return aName;
+
+	public String getLogin() {
+		return login;
 	}
 
-	public void setaName(String aName) {
-		this.aName = aName;
+	public void setLogin(String login) {
+		this.login = login;
 	}
 
-	public String getaPassword() {
-		return aPassword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setaPassword(String aPassword) {
-		this.aPassword = aPassword;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public LocalDate getStart() {

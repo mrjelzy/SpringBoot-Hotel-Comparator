@@ -14,7 +14,6 @@ public class Booking {
 	@Id
 	@GeneratedValue
 	private long id;
-	private double price;
 	
 	@OneToOne
 	private Client client;
@@ -28,21 +27,12 @@ public class Booking {
 	
 	public Booking() {}
 	
-	public Booking( Client client,Agency agency, Room room, LocalDate start, LocalDate end, double price) {
+	public Booking(Client client,Agency agency, Room room, LocalDate start, LocalDate end) {
 		this.agency = agency;
 		this.client = client;
 		this.room = room;
 		this.start = start;
 		this.end = end;
-		this.price = price;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
 	}
 
 	public Client getClient() {

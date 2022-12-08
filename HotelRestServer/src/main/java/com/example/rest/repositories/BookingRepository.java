@@ -11,6 +11,6 @@ import com.example.rest.models.Room;
 
 public interface BookingRepository extends JpaRepository<Booking, Long>{
 	
-	@Query("select b.room from Booking b where b.end > ?1 AND  b.start < ?2")
-	List<Room> findRoomsByFreeDates(LocalDate start, LocalDate end);
+	@Query("SELECT r from Room r where r NOT IN (select b.room from Booking b where b.end > ?1 AND  b.start < ?2) AND r.nbPeoples >= ?3")
+	List<Room> findRoomsByFreeDates(LocalDate start, LocalDate end, int nbPeoples);
 }

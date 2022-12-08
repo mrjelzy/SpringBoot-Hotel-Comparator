@@ -12,13 +12,11 @@ import com.example.rest.models.Agency;
 import com.example.rest.models.Booking;
 import com.example.rest.models.Client;
 import com.example.rest.models.Hotel;
-import com.example.rest.models.Partnership;
 import com.example.rest.models.Room;
 import com.example.rest.repositories.AgencyRepository;
 import com.example.rest.repositories.BookingRepository;
 import com.example.rest.repositories.ClientRepository;
 import com.example.rest.repositories.HotelRepository;
-import com.example.rest.repositories.PartnershipRepository;
 import com.example.rest.repositories.RoomRepository;
 
 @Configuration
@@ -27,22 +25,15 @@ public class HotelData {
 	private Logger logger = LoggerFactory.getLogger(HotelData.class);
 
 	@Bean
-	public CommandLineRunner InitDatabase(HotelRepository hRepository, AgencyRepository aRepository,
-			PartnershipRepository pRepository, BookingRepository bRepository, ClientRepository cRepository,
+	public CommandLineRunner InitDatabase(HotelRepository hRepository, AgencyRepository aRepository, BookingRepository bRepository, ClientRepository cRepository,
 			RoomRepository rRepository) {
 		Hotel h1 = new Hotel("Le Ritz", "blanana", "Paris", "France", 5);
 		hRepository.save(h1);
 		
-		Agency a1 = new Agency("Tour", "tour", "tour");
-		Agency a2 = new Agency("Tim Cook", "tim", "cook");
+		Agency a1 = new Agency("Tour", "tour", "tour", 0.1);
+		Agency a2 = new Agency("Tim Cook", "tim", "cook", 0.2);
 		aRepository.save(a1);
 		aRepository.save(a2);
-		
-		Partnership p1 = new Partnership(h1, a1, 0.1);
-		Partnership p2 = new Partnership(h1, a2, 0.5);
-		
-		pRepository.save(p1);
-		pRepository.save(p2);
 		
 		Client c1 = new Client("Ryan", "Bengoufa", "345678", "45");
 		Client c2 = new Client("Lucas", "Manolo", "345678", "45");
