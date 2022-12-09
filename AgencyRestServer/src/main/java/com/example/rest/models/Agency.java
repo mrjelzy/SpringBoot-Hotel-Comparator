@@ -1,24 +1,23 @@
 package com.example.rest.models;
 
-import java.util.ArrayList;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Agency {
 
 	/* ATTRIBUTES */
 	
+	@Id
+	@GeneratedValue 
 	private long id;
 	private String name;
 	private String login;
 	private String password;
 	private double discount;
-	ArrayList<Client> clients;
+	
 
 	public Agency() {
 	}
@@ -29,13 +28,16 @@ public class Agency {
 		this.login = login;
 		this.password = password;
 		this.discount = discount;
-		this.clients = new ArrayList<Client>();
+		//this.clients = new ArrayList<Client>();
 
 	}
 
 	/* METHODS */
-	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
+	/*
+	 * @Id
+	 * 
+	 * @GeneratedValue(strategy= GenerationType.AUTO)
+	 */
 	public long getId() {
 		return id;
 	}
@@ -77,13 +79,13 @@ public class Agency {
 	}
 	
 	
-	public ArrayList<Client> getClients() {
+	/*public ArrayList<Client> getClients() {
 		return clients;
 	}
 
 	public void setClients(ArrayList<Client> clients) {
 		this.clients = clients;
-	}
+	}*/
 
 	/*@Override
 	public int hashCode() {
