@@ -25,6 +25,7 @@ import com.example.rest.models.Booking;
 import com.example.rest.models.Hotel;
 import com.example.rest.models.Offer;
 import com.example.rest.repositories.AgencyRepository;
+import com.example.rest.repositories.BookingRepository;
 import com.example.rest.repositories.HotelRepository;
 import com.example.rest.repositories.OfferRepository;
 import com.example.rest.repositories.RoomRepository;
@@ -44,6 +45,9 @@ public class AgencyController {
 	
 	@Autowired
 	private RoomRepository rRepository;
+	
+	@Autowired
+	private BookingRepository bRepository;
 
 	private static final String uri = "agencyservice/api";
 
@@ -99,7 +103,7 @@ public class AgencyController {
 		Offer offer = oRepository.findById(input.getIdOffer()).get();
 	
 		Agency agency = aRepository.findById(1L).get();
-		OutputBooking output = new OutputBooking(agency.getLogin(), agency.getPassword(), input.getIdOffer(),
+		OutputBooking output = new OutputBooking(agency.getLogin(), agency.getPassword(), offer.getIdOffer(),
 				input.getName(), input.getSurname(), input.getCard(), input.getCvv(), input.getExp());
 
 		Hotel hotel = offer.getHotel();
@@ -108,6 +112,8 @@ public class AgencyController {
 				Long.class);
 		
 		Booking booked= new Booking(idBooking,hotel,offer.getRoom(),offer.getStart(),offer.getEnd());
+		
+		bRepository.save(booked);
 
 		return booked;
 	}

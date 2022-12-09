@@ -31,12 +31,20 @@ public class Booking {
 	public Booking() {
 	}
 
-	public Booking(Long idBooking,Hotel hotel, Room room, LocalDate start, LocalDate end) {
+	public Booking(Long idBooking, Hotel hotel, Room room, LocalDate start, LocalDate end) {
 		this.idBooking=idBooking;
 		this.hotel = hotel;
 		this.room = room;
 		this.start = start;
 		this.end = end;
+	}
+
+	public long getIdBooking() {
+		return idBooking;
+	}
+
+	public void setIdBooking(long idBooking) {
+		this.idBooking = idBooking;
 	}
 
 	public long getId() {
