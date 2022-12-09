@@ -2,7 +2,6 @@ package com.example.rest.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
@@ -23,7 +22,6 @@ public class Agency {
 	}
 
 	public Agency(String name, String login, String password, double discount) {
-		this.id = id;
 		this.name = name;
 		this.login = login;
 		this.password = password;

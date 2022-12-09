@@ -1,7 +1,6 @@
 package com.example.rest.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;
 
 public class AgencyNotFoundException extends ResponseStatusException{

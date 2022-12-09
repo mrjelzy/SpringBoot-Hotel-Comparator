@@ -11,12 +11,14 @@ import jakarta.persistence.OneToMany;
 public class Hotel {
 
 	@Id
+	@GeneratedValue
 	private long id;
 	private String name;
 	private String adress;
 	private String city;
 	private String country;
 	private int nbStars;
+	private String apiUrl;
 	
 	@OneToMany(mappedBy="hotel")
 	private List<Offer> offers;
@@ -24,13 +26,14 @@ public class Hotel {
 	public Hotel() {
 	}
 
-	public Hotel(long id, String name, String adress, String city, String country, int nbStars) {
+	public Hotel(long id, String name, String adress, String city, String country, int nbStars, String apiUrl) {
 		this.id=id;
 		this.name = name;
 		this.adress = adress;
 		this.city = city;
 		this.country = country;
 		this.nbStars = nbStars;
+		this.apiUrl = apiUrl;
 	}
 
 	public long getId() {
@@ -81,4 +84,13 @@ public class Hotel {
 		this.nbStars = nbStars;
 	}
 
+	public String getApiUrl() {
+		return apiUrl;
+	}
+
+	public void setApiUrl(String apiUrl) {
+		this.apiUrl = apiUrl;
+	}
+
+	
 }

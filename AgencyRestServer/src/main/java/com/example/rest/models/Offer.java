@@ -2,6 +2,7 @@ package com.example.rest.models;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,7 +16,10 @@ public class Offer {
 	@GeneratedValue
 	private long id;
 	private double price;
+	private long idOffer;
+	@Column(name="startDate") 
 	private LocalDate start;
+	@Column(name="endDate") 
 	private LocalDate end;
 
 	@ManyToOne
@@ -79,7 +83,7 @@ public class Offer {
 	public void setIdOffer(long idOffer) {
 		this.idOffer = idOffer;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Offer [id=" + id + ", price=" + price + ", start=" + start + ", end=" + end + ", hotel=" + hotel + "]";

@@ -64,9 +64,6 @@ public class AgencyController {
 	public List<Offer> sendSearch(@RequestBody InputSearch input) {
 		RestTemplate restTemplate = new RestTemplate();
 
-		String city = input.getCity();
-		String country = input.getCountry();
-
 		List<Hotel> hotel = hRepository.findByCityAndCountry(input.getCity(), input.getCountry());
 		Agency agency = aRepository.findById(1L).get();
 
@@ -75,8 +72,7 @@ public class AgencyController {
 		List<Offer> offers = new ArrayList<Offer>();
 		
 		for (Hotel h : hotel) {
-			Long idH = h.getId();
-			Offer[] offer = restTemplate.postForObject("http://localhost:8080/hotelservice/" + idH + "/api/offers",
+			Offer[] offer = restTemplate.postForObject(h.getApiUrl() + "/api/offers",
 					output, Offer[].class);
 			for (Offer o : offer)
 				o.setHotel(h);
@@ -98,9 +94,9 @@ public class AgencyController {
 		OutputBooking output = new OutputBooking(agency.getLogin(), agency.getPassword(), input.getIdOffer(),
 				input.getName(), input.getSurname(), input.getCard(), input.getCvv(), input.getExp());
 
-		Long idH = offer.getHotel().getId();
+		Hotel hotel = offer.getHotel();
 
-		Long idBooking = restTemplate.postForObject("http://localhost:8080/hotelservice/" + idH + "/api/book", output,
+		Long idBooking = restTemplate.postForObject(hotel.getApiUrl() + "/api/book", output,
 				Long.class);
 
 		return idBooking;

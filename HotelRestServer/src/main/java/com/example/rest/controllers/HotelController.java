@@ -29,7 +29,6 @@ import com.example.rest.repositories.BookingRepository;
 import com.example.rest.repositories.ClientRepository;
 import com.example.rest.repositories.HotelRepository;
 import com.example.rest.repositories.OfferRepository;
-import com.example.rest.repositories.RoomRepository;
 
 @RestController
 public class HotelController {
