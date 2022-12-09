@@ -15,17 +15,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.rest.comparator.OutputBooking;
 import com.example.rest.comparator.InputBooking;
 import com.example.rest.comparator.InputSearch;
+import com.example.rest.comparator.OutputBooking;
 import com.example.rest.comparator.OutputSearch;
 import com.example.rest.exceptions.AgencyNotFoundException;
 import com.example.rest.models.Agency;
+import com.example.rest.models.Booking;
 import com.example.rest.models.Hotel;
 import com.example.rest.models.Offer;
 import com.example.rest.repositories.AgencyRepository;
 import com.example.rest.repositories.HotelRepository;
 import com.example.rest.repositories.OfferRepository;
+import com.example.rest.repositories.RoomRepository;
 
 @RestController
 public class AgencyController {
@@ -39,6 +41,9 @@ public class AgencyController {
 
 	@Autowired
 	private OfferRepository oRepository;
+	
+	@Autowired
+	private RoomRepository rRepository;
 
 	private static final String uri = "agencyservice/api";
 
@@ -80,16 +85,19 @@ public class AgencyController {
 		}
 		for (Offer o : offers) {
 			o.setIdOffer(o.getId());
+			rRepository.save(o.getRoom());
 			oRepository.save(o);
+			o.setId((oRepository.findByIdOfferAndHotel(o.getIdOffer(),o.getHotel())).getId());
 		}
 		return offers;
 	}
 
 	@PostMapping(uri + "/agencies/sendChoice")
-	public Long sendChoice(@RequestBody InputBooking input) {
+	public Booking sendChoice(@RequestBody InputBooking input) {
 		RestTemplate restTemplate = new RestTemplate();
 
 		Offer offer = oRepository.findById(input.getIdOffer()).get();
+	
 		Agency agency = aRepository.findById(1L).get();
 		OutputBooking output = new OutputBooking(agency.getLogin(), agency.getPassword(), input.getIdOffer(),
 				input.getName(), input.getSurname(), input.getCard(), input.getCvv(), input.getExp());
@@ -98,8 +106,10 @@ public class AgencyController {
 
 		Long idBooking = restTemplate.postForObject(hotel.getApiUrl() + "/api/book", output,
 				Long.class);
+		
+		Booking booked= new Booking(idBooking,hotel,offer.getRoom(),offer.getStart(),offer.getEnd());
 
-		return idBooking;
+		return booked;
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -109,7 +119,7 @@ public class AgencyController {
 	}
 
 	@PutMapping(uri + "/addhotel/{id}")
-	public Hotel updateEmployee(@RequestBody Hotel newHotel, @PathVariable long id) {
+	public Hotel updateHotel(@RequestBody Hotel newHotel, @PathVariable long id) {
 		return hRepository.findById(id).map(hotel -> {
 			hotel.setId(newHotel.getId());
 			hotel.setName(newHotel.getName());
