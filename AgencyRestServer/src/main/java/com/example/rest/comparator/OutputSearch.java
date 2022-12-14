@@ -3,14 +3,15 @@ package com.example.rest.comparator;
 import java.time.LocalDate;
 
 public class OutputSearch {
-	
+
 	private String login;
 	private String password;
 	LocalDate start;
 	LocalDate end;
-	int nbPeoples;
-	
-	public OutputSearch() {}
+	private int nbPeoples;
+
+	public OutputSearch() {
+	}
 
 	public OutputSearch(String login, String password, LocalDate start, LocalDate end, int nbPeoples) {
 		this.login = login;
@@ -19,7 +20,6 @@ public class OutputSearch {
 		this.end = end;
 		this.nbPeoples = nbPeoples;
 	}
-
 
 	public String getLogin() {
 		return login;
@@ -60,6 +60,5 @@ public class OutputSearch {
 	public void setNbPeoples(int nbPeoples) {
 		this.nbPeoples = nbPeoples;
 	}
-	
-	
+
 }

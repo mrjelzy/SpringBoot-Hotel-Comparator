@@ -1,5 +1,6 @@
 package com.example.rest.controllers;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,19 +43,19 @@ public class AgencyController {
 
 	@Autowired
 	private OfferRepository oRepository;
-	
+
 	@Autowired
 	private RoomRepository rRepository;
-	
+
 	@Autowired
 	private BookingRepository bRepository;
 
-	private static final String uri = "agencyservice/api";
+	private static final String uri = "agencyservice/tour/api";
 
 	/* METHODS */
 	@GetMapping(uri + "/agencies")
-	public List<Agency> getAllAgencys() {
-		return aRepository.findAll();
+	public Agency getAgency() {
+		return aRepository.findAll().get(0);
 	}
 
 	@PutMapping(uri + "/agencies/{id}")
@@ -73,25 +74,29 @@ public class AgencyController {
 	public List<Offer> sendSearch(@RequestBody InputSearch input) {
 		RestTemplate restTemplate = new RestTemplate();
 
-		List<Hotel> hotel = hRepository.findByCityAndCountry(input.getCity(), input.getCountry());
+		double gaps = Math.abs(ChronoUnit.DAYS.between(input.getStart(), input.getEnd()));
+
+		List<Hotel> hotel = hRepository.findByCityAndCountryAndNbStars(input.getCity(), input.getCountry(),
+				input.getNbStars());
 		Agency agency = aRepository.findById(1L).get();
 
 		OutputSearch output = new OutputSearch(agency.getLogin(), agency.getPassword(), input.getStart(),
-				input.getEnd(), input.getNbPeople());
+				input.getEnd(), input.getNbPeople()	);
 		List<Offer> offers = new ArrayList<Offer>();
-		
+
 		for (Hotel h : hotel) {
-			Offer[] offer = restTemplate.postForObject(h.getApiUrl() + "/api/offers",
-					output, Offer[].class);
+			Offer[] offer = restTemplate.postForObject(h.getApiUrl() + "/api/offers", output, Offer[].class);
 			for (Offer o : offer)
 				o.setHotel(h);
 			offers.addAll(Arrays.asList(offer));
 		}
+
 		for (Offer o : offers) {
+			double totalPrice = o.getRoom().getPrice() * gaps * (1 - o.getDiscount());
 			o.setIdOffer(o.getId());
 			rRepository.save(o.getRoom());
 			oRepository.save(o);
-			o.setId((oRepository.findByIdOfferAndHotel(o.getIdOffer(),o.getHotel())).getId());
+			o.setId((oRepository.findByIdOfferAndHotel(o.getIdOffer(), o.getHotel())).getId());
 		}
 		return offers;
 	}
@@ -101,18 +106,17 @@ public class AgencyController {
 		RestTemplate restTemplate = new RestTemplate();
 
 		Offer offer = oRepository.findById(input.getIdOffer()).get();
-	
+
 		Agency agency = aRepository.findById(1L).get();
 		OutputBooking output = new OutputBooking(agency.getLogin(), agency.getPassword(), offer.getIdOffer(),
 				input.getName(), input.getSurname(), input.getCard(), input.getCvv(), input.getExp());
 
 		Hotel hotel = offer.getHotel();
 
-		Long idBooking = restTemplate.postForObject(hotel.getApiUrl() + "/api/book", output,
-				Long.class);
-		
-		Booking booked= new Booking(idBooking,hotel,offer.getRoom(),offer.getStart(),offer.getEnd());
-		
+		Long idBooking = restTemplate.postForObject(hotel.getApiUrl() + "/api/book", output, Long.class);
+
+		Booking booked = new Booking(idBooking, hotel, offer.getRoom(), offer.getStart(), offer.getEnd());
+
 		bRepository.save(booked);
 
 		return booked;

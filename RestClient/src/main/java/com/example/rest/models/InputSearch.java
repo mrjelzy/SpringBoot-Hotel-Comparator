@@ -1,4 +1,4 @@
-package com.example.rest.comparator;
+package com.example.rest.models;
 
 import java.time.LocalDate;
 
@@ -10,8 +10,8 @@ public class InputSearch {
 	private LocalDate start;
 	private LocalDate end;
 	private int nbPeople;
-	private int nbStars;
 	private double maxPrice;
+	private int nbStars;
 
 	public InputSearch() {
 	}
