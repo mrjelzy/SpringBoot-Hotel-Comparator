@@ -27,11 +27,11 @@ public class HotelData {
 	@Bean
 	public CommandLineRunner InitDatabase(HotelRepository hRepository, AgencyRepository aRepository, BookingRepository bRepository, ClientRepository cRepository,
 			RoomRepository rRepository) {
-		Hotel h1 = new Hotel("Le Ritz", "blanana", "Paris", "France", 5);
+		Hotel h1 = new Hotel("Le Ritz", "15 Place Vendôme", "Paris", "France", 5);
 		hRepository.save(h1);
 		
-		Agency a1 = new Agency("Tour", "tour", "tour", 0.1);
-		Agency a2 = new Agency("Tim Cook", "tim", "cook", 0.2);
+		Agency a1 = new Agency("Tour", "tour", "tour", 0.3);
+		Agency a2 = new Agency("Travel For Life", "travel", "travel", 0.12);
 		aRepository.save(a1);
 		aRepository.save(a2);
 		

@@ -96,17 +96,19 @@ public class Offer {
 
 	@Override
 	public String toString() {
-		
-		double gaps = Math.abs(ChronoUnit.DAYS.between(start,end));
+
+		double gaps = Math.abs(ChronoUnit.DAYS.between(start, end));
 		double totalPrice = room.getPrice() * gaps * (1 - discount);
 		if (this.agency == null) {
 			return " -Hotel " + hotel.getName() + " " + hotel.getNbStars() + " étoiles, situé au " + hotel.getAdress()
 					+ " " + hotel.getCity() + " " + hotel.getCountry() + ". Chambre n° " + room.getId()
-					+ ". Prix total du sejour : " + totalPrice + "$";
+					+ ". Prix total du sejour : " + totalPrice + "$. Pour visualiser la chambre cliquez sur ce lien: "
+					+ room.getUrlImg();
 		} else {
-			return " Offre proposée par l'agence "+agency.getName()+". Hotel " + hotel.getName() + " " + hotel.getNbStars() + " étoiles, situé au " + hotel.getAdress()
-			+ " " + hotel.getCity() + " " + hotel.getCountry() + ". Chambre n° " + room.getId()
-			+ ". Prix total du sejour : " + totalPrice + "$";
+			return " Offre proposée par l'agence " + agency.getName() + ". Hotel " + hotel.getName() + " "
+					+ hotel.getNbStars() + " étoiles, situé au " + hotel.getAdress() + " " + hotel.getCity() + " "
+					+ hotel.getCountry() + ". Chambre n° " + room.getId() + ". Prix total du sejour : " + totalPrice
+					+ "$. Pour visualiser la chambre cliquez sur ce lien: " + room.getUrlImg();
 		}
 	}
 

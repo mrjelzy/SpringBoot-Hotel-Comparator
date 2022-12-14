@@ -25,12 +25,12 @@ public class AgencyData {
 		Agency agence = new Agency("Tour Tour", "tour", "tour", 0.3);
 		aRepository.save(agence);
 
-		Hotel h1 = new Hotel(1,"Le Ritz", "blanana", "Paris", "France", 5, "http://localhost:8080/hotelservice");
-		/*
-		 * Hotel h2 = new Hotel(2,"Le Negresco", "Promenade des anglais", "Nice",
-		 * "France", 5);
-		 */
+		Hotel h1 = new Hotel(1,"Le Ritz", "15 Place Vendôme", "Paris", "France", 5, "http://localhost:8080/hotelservice/ritz");
+		Hotel h2 = new Hotel(2,"Pullmlan", "1 Rue des Pertuisanes", "Montpellier", "France", 4,"http://localhost:8082/hotelservice/pullman");
+		Hotel h3 = new Hotel(3,"Le Negresco", "37 Promenade des Anglais", "Nice", "France", 5,"http://localhost:8084/hotelservice/negresco");
 		hRepository.save(h1);
+		hRepository.save(h2);
+		hRepository.save(h3);
 		/* hRepository.save(h2); */
 
 

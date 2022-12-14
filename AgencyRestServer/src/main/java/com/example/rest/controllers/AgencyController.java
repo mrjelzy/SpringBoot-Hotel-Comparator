@@ -53,12 +53,12 @@ public class AgencyController {
 	private static final String uri = "agencyservice/tour/api";
 
 	/* METHODS */
-	@GetMapping(uri + "/agencies")
+	@GetMapping(uri + "/agency")
 	public Agency getAgency() {
 		return aRepository.findAll().get(0);
 	}
 
-	@PutMapping(uri + "/agencies/{id}")
+	@PutMapping(uri + "/agency/{id}")
 	public Agency updateAgency(@RequestBody Agency newAgency, @PathVariable long id) throws AgencyNotFoundException {
 		return aRepository.findById(id).map(agency -> {
 			agency.setName(newAgency.getName());
@@ -70,7 +70,7 @@ public class AgencyController {
 		}).orElseThrow(() -> new AgencyNotFoundException("Error : Could not fint agency with id : " + id));
 	}
 
-	@PostMapping(uri + "/agencies/sendSearch")
+	@PostMapping(uri + "/sendSearch")
 	public List<Offer> sendSearch(@RequestBody InputSearch input) {
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -101,7 +101,7 @@ public class AgencyController {
 		return offers;
 	}
 
-	@PostMapping(uri + "/agencies/sendChoice")
+	@PostMapping(uri + "/sendChoice")
 	public Booking sendChoice(@RequestBody InputBooking input) {
 		RestTemplate restTemplate = new RestTemplate();
 

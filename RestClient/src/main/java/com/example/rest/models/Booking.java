@@ -1,6 +1,7 @@
 package com.example.rest.models;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Booking {
 
@@ -16,15 +17,22 @@ public class Booking {
 
 	private LocalDate end;
 
+	private String name;
+
+	private String surname;
+
 	public Booking() {
 	}
 
-	public Booking(Long idBooking, Hotel hotel, Room room, LocalDate start, LocalDate end) {
+	public Booking(Long idBooking, Hotel hotel, Room room, LocalDate start, LocalDate end, String name,
+			String surname) {
 		this.idBooking = idBooking;
 		this.hotel = hotel;
 		this.room = room;
 		this.start = start;
 		this.end = end;
+		this.name = name;
+		this.surname = surname;
 	}
 
 	public long getIdBooking() {
@@ -75,9 +83,28 @@ public class Booking {
 		this.end = end;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
 	@Override
 	public String toString() {
-		return "Booking [id=" + id + ", room=" + room + ", hotel=" + hotel + ", start=" + start + ", end=" + end + "]";
+		System.out.println("Reservation Confirmée pour ");
+		return "N° de la réservation : " + idBooking + ". Hotel " + hotel.getName() + " de " + hotel.getNbStars()
+				+ " étoiles, situé au " + hotel.getAdress() + ", " + hotel.getCity() + ", " + hotel.getCountry()
+				+ ". Chambre n° " + room.getId();
 	}
 
 }

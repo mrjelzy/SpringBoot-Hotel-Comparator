@@ -44,7 +44,7 @@ public class HotelController {
 	private ClientRepository cRepository;
 	@Autowired
 	private OfferRepository oRepository;
-	private static final String uri = "hotelservice/api";
+	private static final String uri = "hotelservice/ritz/api";
 
 	
 	/* METHODS */
@@ -72,7 +72,6 @@ public class HotelController {
 		Hotel h = repository.findById(1L).get();
 		List<Offer> offers = new ArrayList<Offer>();
 		for(Room r : availableRooms) {
-			System.out.println(r);
 			Offer o = new Offer(input.getStart(), input.getEnd(), h, connected, r, connected.getDiscount());
 			offers.add(o);
 			oRepository.save(o);

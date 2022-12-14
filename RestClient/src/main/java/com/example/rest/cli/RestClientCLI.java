@@ -35,70 +35,108 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 		BufferedReader inputReader;
 		String userInput = "";
 
+		String status = null;
+
 		try {
 
-			inputReader = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Choisissez ce que vous voulez faire : ");
-			System.out.println("\n1. Se connecter à une agence");
-			System.out.println("\n2. Utiliser le Compararteur");
-			String choice = inputReader.readLine();
-			System.out.println();
+			while (true) {
+				inputReader = new BufferedReader(new InputStreamReader(System.in));
+				System.out.println("Choisissez ce que vous voulez faire : ");
+				System.out.println("\n1. Se connecter à une agence");
+				System.out.println("\n2. Utiliser le Compararteur");
+				String choice = inputReader.readLine();
+				System.out.println();
 
-			if (choice.equals("1")) {
-				setTestServiceUrl(inputReader);
+				if (choice.equals("1")) {
+					setTestServiceUrl(inputReader);
 
-				URI_AGENCIES = SERVICE_AGENCY_URL + "/api/agencies";
+					URI_AGENCIES = SERVICE_AGENCY_URL + "/api/agencies";
 
-				do {
-					menu();
-					userInput = inputReader.readLine();
-					processUserInput(inputReader, userInput, proxy);
-					Thread.sleep(3000);
-				} while (!userInput.equals(QUIT));
-			}
-
-			if (choice.equals("2")) {
-
-				InputSearch search = userInputSearch(inputReader, "comparator");
-				List<Offer> listOffer = new ArrayList<Offer>();
-				List<String> agenciesName = List.of("tour");
-				List<Integer> nbOffersByAgence = new ArrayList<Integer>();
-
-				for (String a : agenciesName) {
-					URI_AGENCIES = "http://localhost:8081/agencyservice/" + a + "/api";
-					Offer[] offers = proxy.postForObject(URI_AGENCIES + "/agencies/sendSearch", search, Offer[].class);
-					Agency agency = proxy.getForObject(URI_AGENCIES + "/agencies", Agency.class);
-					nbOffersByAgence.add(offers.length);
-
-					listOffer.addAll(Arrays.asList(offers));
-
-					for (Offer o : listOffer)
-						o.setAgency(agency);
+					do {
+						menu();
+						userInput = inputReader.readLine();
+						processUserInput(inputReader, userInput, proxy);
+						Thread.sleep(3000);
+					} while (!userInput.equals(QUIT));
 				}
 
-				System.out.println("Résultat de la recherche :");
-				if (!listOffer.isEmpty()) {
-					URI_AGENCIES = "http://localhost:8081/agencyservice/";
-					offersMenu(listOffer);
-					int userChoice = Integer.parseInt(inputReader.readLine());
-					System.out.println();
+				if (choice.equals("2")) {
 
-					Offer choosenOffer = listOffer.get(userChoice - 1);
+					do {
+						int port = 8081;
 
-					InputBooking inputBooking = userInputBooking(inputReader, choosenOffer);
+						InputSearch search = userInputSearch(inputReader, "comparator");
+						List<Offer> listOffer = new ArrayList<Offer>();
+						List<String> agenciesName = List.of("tour", "smart", "travel");
+						List<Integer> nbOffersByAgence = new ArrayList<Integer>();
 
-					for (int j = 0; j < agenciesName.size(); j++) {
-						if (userChoice <= nbOffersByAgence.get(j)) {
-							URI_AGENCIES += agenciesName.get(j) + "/api/agencies/sendChoice";
+						for (String a : agenciesName) {
+							URI_AGENCIES = "http://localhost:";
+							URI_AGENCIES += Integer.toString(port) + "/agencyservice/" + a + "/api";
+							Offer[] offers = proxy.postForObject(URI_AGENCIES + "/sendSearch", search, Offer[].class);
+							Agency agency = proxy.getForObject(URI_AGENCIES + "/agency", Agency.class);
+							System.out.println(agency.getName());
+							if (nbOffersByAgence.isEmpty())
+								nbOffersByAgence.add(offers.length);
+							else
+								nbOffersByAgence.add(offers.length + nbOffersByAgence.get(nbOffersByAgence.size() - 1));
+
+							for (Offer o : offers)
+								o.setAgency(agency);
+
+							listOffer.addAll(Arrays.asList(offers));
+
+							port += 2;
 						}
-					}
 
-					Booking booking = proxy.postForObject(URI_AGENCIES, inputBooking, Booking.class);
+						port = 8081;
 
-					System.out.println("Réservation confirmée : " + booking.toString());
+						System.out.println("Résultat de la recherche :");
+						if (!listOffer.isEmpty()) {
+
+							offersMenu(listOffer);
+							System.out.println("Souhaitez-vous réserver une offre ? (y/N)");
+							status = inputReader.readLine();
+							System.out.println();
+
+							if (status.equals("y")) {
+								System.out.println("Vous souhaitez reserver quelle offre ?");
+								int userChoice = Integer.parseInt(inputReader.readLine());
+								System.out.println();
+
+								Offer choosenOffer = listOffer.get(userChoice - 1);
+
+								InputBooking inputBooking = userInputBooking(inputReader, choosenOffer);
+
+								boolean found = false;
+								int j = 0;
+								while (j < agenciesName.size() && !found) {
+									if (userChoice <= nbOffersByAgence.get(j)) {
+										URI_AGENCIES = "http://localhost:";
+										URI_AGENCIES += Integer.toString(port) + "/agencyservice/" + agenciesName.get(j)
+												+ "/api/sendChoice";
+										found = true;
+									}
+									j++;
+									port += 2;
+								}
+
+								Booking booking = proxy.postForObject(URI_AGENCIES, inputBooking, Booking.class);
+
+								System.out.println(booking.toString());
+							} else {
+								System.out.println("Aucun résultat trouvé pour votre recherche.");
+							}
+						}
+
+						System.out.println("Voulez-vous quitter le comparateur ? (y/N)");
+						if (inputReader.readLine().equals("y")) {
+							status = "done";
+						}
+
+					} while (!status.equals("done"));
 				}
 			}
-
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -144,23 +182,23 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 			String city = reader.readLine();
 			System.out.println();
 
-			System.out.println("Veuillez entrer la date d'arrivée:");
+			System.out.println("Veuillez entrer la date d'arrivée (YYYY-MM-JJ):");
 			LocalDate start = LocalDate.parse(reader.readLine());
 			System.out.println();
 
-			System.out.println("Veuillez entrez la date de départ :");
+			System.out.println("Veuillez entrez la date de départ (YYYY-MM-JJ):");
 			LocalDate end = LocalDate.parse(reader.readLine());
 			System.out.println();
 
-			double  maxPrice;
+			double maxPrice;
 			if (caller.equals("agency")) {
 				System.out.println("Veuillez entrez le prix maximum:");
 				maxPrice = Double.parseDouble(reader.readLine());
 				System.out.println();
 			}
-			
+
 			else {
-				maxPrice=0;
+				maxPrice = 0;
 			}
 
 			System.out.println("Veuillez entrez le nombre de personne :");
@@ -229,6 +267,7 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 				}
 				if (!listOffer.isEmpty()) {
 					offersMenu(listOffer);
+					System.out.println("Vous souhaitez reserver quelle offre ? ");
 					String userChoice = reader.readLine();
 
 					Offer choosenOffer = listOffer.get(Integer.parseInt(userChoice) - 1);
@@ -238,6 +277,8 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 					Booking booking = proxy.postForObject(URI_AGENCIES + "/sendChoice", inputBooking, Booking.class);
 
 					System.out.println("Réservation confirmée : " + booking.toString());
+				} else {
+					System.out.println("Aucun résultat trouvé pour votre recherche.");
 				}
 				break;
 
