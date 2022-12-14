@@ -43,14 +43,14 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 				inputReader = new BufferedReader(new InputStreamReader(System.in));
 				System.out.println("Choisissez ce que vous voulez faire : ");
 				System.out.println("\n1. Se connecter à une agence");
-				System.out.println("\n2. Utiliser le Compararteur");
+				System.out.println("\n2. Utiliser le Comparateur");
 				String choice = inputReader.readLine();
 				System.out.println();
 
 				if (choice.equals("1")) {
 					setTestServiceUrl(inputReader);
 
-					URI_AGENCIES = SERVICE_AGENCY_URL + "/api/agencies";
+					URI_AGENCIES = SERVICE_AGENCY_URL + "/api";
 
 					do {
 						menu();
@@ -75,7 +75,7 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 							URI_AGENCIES += Integer.toString(port) + "/agencyservice/" + a + "/api";
 							Offer[] offers = proxy.postForObject(URI_AGENCIES + "/sendSearch", search, Offer[].class);
 							Agency agency = proxy.getForObject(URI_AGENCIES + "/agency", Agency.class);
-							System.out.println(agency.getName());
+
 							if (nbOffersByAgence.isEmpty())
 								nbOffersByAgence.add(offers.length);
 							else
@@ -90,6 +90,10 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 						}
 
 						port = 8081;
+
+						System.out.println(nbOffersByAgence.get(0));
+						System.out.println(nbOffersByAgence.get(1));
+						System.out.println(nbOffersByAgence.get(2));
 
 						System.out.println("Résultat de la recherche :");
 						if (!listOffer.isEmpty()) {
@@ -124,9 +128,9 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 								Booking booking = proxy.postForObject(URI_AGENCIES, inputBooking, Booking.class);
 
 								System.out.println(booking.toString());
-							} else {
-								System.out.println("Aucun résultat trouvé pour votre recherche.");
 							}
+						} else {
+							System.out.println("Aucun résultat trouvé pour votre recherche.");
 						}
 
 						System.out.println("Voulez-vous quitter le comparateur ? (y/N)");
@@ -147,17 +151,11 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 	}
 
 	@Override
-	protected boolean validServiceUrl() {
-		return SERVICE_AGENCY_URL.equals("http://localhost:8081/agencyservice");
-	}
-
-	@Override
 	protected void menu() {
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(QUIT + ". Quit.");
 		builder.append("\n1. Recherche.");
-		builder.append("\n2. Voir tout les hotels.");
 		System.out.println(builder);
 
 	}
@@ -238,7 +236,7 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 			String exp = reader.readLine();
 			System.out.println();
 
-			return new InputBooking(choosenOffer.getIdOffer(), name, surname, card, cvv, exp);
+			return new InputBooking(choosenOffer.getId(), name, surname, card, cvv, exp);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -292,5 +290,11 @@ public class RestClientCLI extends AbstractMain implements CommandLineRunner {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected boolean validServiceUrl() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

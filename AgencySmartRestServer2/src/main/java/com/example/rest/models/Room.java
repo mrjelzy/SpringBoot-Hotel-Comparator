@@ -8,11 +8,12 @@ import jakarta.persistence.Id;
 public class Room {
 	
 	@Id
+	@GeneratedValue
 	private long id;
 	private int nbPeoples;
 	private double price;
 	private String urlImg;
-
+	
 	public String getUrlImg() {
 		return urlImg;
 	}

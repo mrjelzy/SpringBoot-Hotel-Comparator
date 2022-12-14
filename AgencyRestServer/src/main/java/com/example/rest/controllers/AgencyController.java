@@ -92,7 +92,6 @@ public class AgencyController {
 		}
 
 		for (Offer o : offers) {
-			double totalPrice = o.getRoom().getPrice() * gaps * (1 - o.getDiscount());
 			o.setIdOffer(o.getId());
 			rRepository.save(o.getRoom());
 			oRepository.save(o);

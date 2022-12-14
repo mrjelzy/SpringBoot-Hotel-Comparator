@@ -10,6 +10,12 @@ public abstract class AbstractMain {
 	protected void setTestServiceUrl(BufferedReader inputReader)
 			throws IOException {
 		
+		System.out.println("Voici les URL des agences disponibles:");
+		System.out.println();
+		
+		System.out.println("Tour Tour : http://localhost:8081/agencyservice/tour");
+		System.out.println("Smart Travel : http://localhost:8083/agencyservice/smart");
+		System.out.println("Travel For Life : http://localhost:8085/agencyservice/travel");
 		System.out.println("Saisir l'URL de l'agence à laquel vous voulez vous connecter : ");
 		SERVICE_AGENCY_URL = inputReader.readLine();
 		
